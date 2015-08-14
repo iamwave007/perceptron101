@@ -11,7 +11,7 @@ N = 2*N_c
 
 # Run gradient descent
 delta = 1E-7
-eta = 0.2
+eta = 1E-3
 max_iter = 1000
 w = np.array([0, 0, 0])
 grad_thresh = 5

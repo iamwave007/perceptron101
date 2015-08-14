@@ -39,13 +39,13 @@ X = df.iloc[0:100, [0,2]].values
 
 # matplotlib inline
 import matplotlib.pyplot as plt
-# from mlxtend.evaluate import plot_decision_regions
+from mlxtend.evaluate import plot_decision_regions
 
 ppn = Perceptron(epochs=10, eta=0.1)
 
 ppn.train(X, y)
 print('Weights: %s' % ppn.w_)
-# plot_decision_regions(X, y, clf=ppn)
+plot_decision_regions(X, y, clf=ppn)
 plt.title('Perceptron')
 plt.xlabel('sepal length [cm]')
 plt.ylabel('petal length [cm]')

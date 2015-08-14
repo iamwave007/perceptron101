@@ -1,7 +1,6 @@
 from random import choice 
 from numpy import array, dot, random 
-from pylab import plot, ylim
-
+import numpy as np
 # how to save the trained ability somewhere for later use?
 # what pattern does the vector w follow?
 
@@ -14,7 +13,9 @@ training_data = [
 
 w = random.rand(3)
 print w, " is w is here"
-unit_step = lambda x: 0 if x < 0 else 1 
+# unit_step = lambda x: 0 if x < 0 else 1
+sigma =lambda x: 1/(1+np.exp(-x))
+
 errors = []
 weights_2=[]
 eta = 0.2   
@@ -23,7 +24,7 @@ n = 100
 for i in range(n):
   x, expected = choice(training_data)
   result = dot(w, x) 
-  error = expected - unit_step(result)
+  error = expected - sigma(result)
   errors.append(error) 
   w += eta * error * x
   print w[2],error
@@ -32,10 +33,10 @@ for i in range(n):
 
 for x, _ in training_data: 
   result = dot(x, w)
-  print("{}: {} -> {}".format(x[:2], result, unit_step(result)))
+  print("{}: {} -> {}".format(x[:2], result, sigma(result)))
 
 
-from pylab import *
+import matplotlib.pyplot as plt
 # plot(range(n),errors)
-plot(range(n),weights_2)
-show()
+plt.plot(range(n),weights_2)
+plt.show()
