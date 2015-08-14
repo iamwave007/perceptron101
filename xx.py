@@ -15,7 +15,7 @@ w = random.rand(3)
 print w, " is w is here"
 # unit_step = lambda x: 0 if x < 0 else 1
 sigma =lambda x: 1/(1+np.exp(-x))
-
+# use of sigma function is the begining of "delta rule"
 errors = []
 weights_2=[]
 eta = 0.2   
