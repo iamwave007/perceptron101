@@ -1,3 +1,4 @@
+#  there has to be a way to simplify these convoluted algo right?
 import numpy as np
 
 def sigmoid(x):
@@ -26,38 +27,43 @@ class NeuralNetwork:
         self.weights = []
         for i in range(1, len(layers) - 1):
             r = 2*np.random.random((layers[i-1] + 1, layers[i] + 1)) -1
-            self.weights.append(r)
+            self.weights.append(r)  # prepared 3x3 for inputs
         r = 2*np.random.random((layers[i] + 1, layers[i+1])) - 1
-        # -------------------------------------------||||||---------
-        self.weights.append(r)
+        self.weights.append(r)  # prepared and appended 3X1 for next layer
 
-    def fit(self, X, y, learning_rate=0.2, epochs=100000):
-        # Add column of ones to X
-        # This is to add the bias unit to the input layer
+    def fit(self, X, y, learning_rate=0.2, epochs=5):
         ones = np.atleast_2d(np.ones(X.shape[0]))
         X = np.concatenate((ones.T, X), axis=1)
-        
+        # recreated input stack X with addition of biases.
+        # now it's 4x3
         for k in range(epochs):
             if k % 10000 == 0: print 'epochs:', k
-            
+
             i = np.random.randint(X.shape[0])
+            # choosing one random type of input
+
             a = [X[i]]
 
             for l in range(len(self.weights)):
-                    dot_value = np.dot(a[l], self.weights[l])
-                    activation = self.activation(dot_value)
-                    a.append(activation)
-            # output layer
+                dot_value = np.dot(a[l], self.weights[l]) 
+                    # where did bias go?
+                activation = self.activation(dot_value)
+                a.append(activation)
+
+
+            #a, deltas :  1x3
             error = y[i] - a[-1]
             deltas = [error * self.activation_prime(a[-1])]
 
             # we need to begin at the second to last layer 
             # (a layer before the output layer)
-            for l in range(len(a) - 2, 0, -1): 
-                deltas.append(deltas[-1].dot(self.weights[l].T)*self.activation_prime(a[l]))
+            for l in range(len(a) - 2, 0, -1):
+                stp1=deltas[-1].dot(self.weights[l].T)
+                deltas.append(stp1*self.activation_prime(a[l]))
 
             # reverse
-            # [level3(output)->level2(hidden)]  => [level2(hidden)->level3(output)]
+            # [level3(output)->level2(hidden)]  
+            #   => [level2(hidden)->level3(output)]
             deltas.reverse()
 
             # backpropagation
@@ -90,3 +96,5 @@ if __name__ == '__main__':
 
     for e in X:
         print(e,nn.predict(e))
+
+
