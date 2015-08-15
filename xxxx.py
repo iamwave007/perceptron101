@@ -35,12 +35,12 @@ class NeuralNetwork:
         self.weights.append(r)
         # print self.weights
 # [
-# array([[-0.63812697, -0.05923502, -0.91001026],
-#        [-0.73703247,  0.74775372, -0.62287639],
-#        [-0.84800963,  0.26752814,  0.69398802]]), 
-# array([[ 0.79492836],
-#        [ 0.22395879],
-#        [ 0.23241092]])
+    # array([[-0.63812697, -0.05923502, -0.91001026],
+    #        [-0.73703247,  0.74775372, -0.62287639],
+    #        [-0.84800963,  0.26752814,  0.69398802]]), 
+    # array([[ 0.79492836],
+    #        [ 0.22395879],
+    #        [ 0.23241092]])
 # ]
 
     def fit(self, X, y, learning_rate=0.2, epochs=100000):
@@ -52,19 +52,45 @@ class NeuralNetwork:
         # X[0].shape    # (2,)
         # X[0].shape+X[1].shape     #(2,2)
         # np.ones(X.shape[0]) #array([ 1.,  1.,  1.,  1.])
-        # np.atleast_2d(np.ones(X.shape[0])) # array([[ 1.,  1.,  1.,  1.]])
+            #  means 4 input types
+        # np.atleast_2d(np.ones(X.shape[0])) 
+            # array([[ 1.,  1.,  1.,  1.]])
         X = np.concatenate((ones.T, X), axis=1)
-
+        # ones.T:                   X:
+            # array([[ 1.],          array([[0, 0],
+            #        [ 1.],                 [0, 1],
+            #        [ 1.],                 [1, 0],
+            #        [ 1.]])                [1, 1]])
+            
+            #X:     # array([[ 1.,  0.,  0.],
+                    #        [ 1.,  0.,  1.],
+                    #        [ 1.,  1.,  0.],
+                    #        [ 1.,  1.,  1.]])
         for k in range(epochs):
             if k % 10000 == 0: print 'epochs:', k
-            
+            # not efficient computationally
             i = np.random.randint(X.shape[0])
+            # a random number from [0,4], either 0,1,2,3
             a = [X[i]]
-
-            for l in range(len(self.weights)):
-                    dot_value = np.dot(a[l], self.weights[l])
-                    activation = self.activation(dot_value)
-                    a.append(activation)
+            print i,a
+            # print a:  [array([ 1.,  0.,  1.])]
+            # print self.weights
+            # [
+            # array([[-0.63812697, -0.05923502, -0.91001026],
+            #        [-0.73703247,  0.74775372, -0.62287639],
+            #        [-0.84800963,  0.26752814,  0.69398802]]), 
+            # array([[ 0.79492836],
+            #        [ 0.22395879],
+            #        [ 0.23241092]])
+            # ]
+            for l in range(len(self.weights)):  # range(2)
+                # l = 0,1
+                # a=[array([ 1.,  0.,  1.])]
+                # print l,a[l]
+                # print "============"
+                dot_value = np.dot(a[l], self.weights[l])
+                activation = self.activation(dot_value)
+                a.append(activation)
             # output layer
             error = y[i] - a[-1]
             deltas = [error * self.activation_prime(a[-1])]
@@ -82,7 +108,9 @@ class NeuralNetwork:
             # 1. Multiply its output delta and input activation 
             #    to get the gradient of the weight.
             # 2. Subtract a ratio (percentage) of the gradient from the weight.
+
             for i in range(len(self.weights)):
+
                 layer = np.atleast_2d(a[i])
                 delta = np.atleast_2d(deltas[i])
                 self.weights[i] += learning_rate * layer.T.dot(delta)
