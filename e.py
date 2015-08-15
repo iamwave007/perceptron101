@@ -31,13 +31,13 @@ class NeuralNetwork:
         r = 2*np.random.random((layers[i] + 1, layers[i+1])) - 1
         self.weights.append(r)  # prepared and appended 3X1 for next layer
 
-    def fit(self, X, y, learning_rate=0.2, epochs=5):
+    def fit(self, X, y, learning_rate=0.2, epochs=10000):
         ones = np.atleast_2d(np.ones(X.shape[0]))
         X = np.concatenate((ones.T, X), axis=1)
         # recreated input stack X with addition of biases.
         # now it's 4x3
         for k in range(epochs):
-            if k % 10000 == 0: print 'epochs:', k
+            # if k % 10000 == 0: print 'epochs:', k
 
             i = np.random.randint(X.shape[0])
             # choosing one random type of input
